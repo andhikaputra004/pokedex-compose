@@ -1,7 +1,9 @@
 package com.example.pokedex.module
 
+import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.pokedex.BuildConfig
+import com.example.pokedex.data.local.AppDatabase
 import com.example.pokedex.data.remote.PokedexRepository
 import com.example.pokedex.data.remote.PokedexService
 import com.example.pokedex.page.main.MainViewModel
@@ -40,7 +42,12 @@ val networkModule = module {
     }
 
     single { get<Retrofit>().create(PokedexService::class.java) }
-    single { PokedexRepository(get()) }
+    single { PokedexRepository(get(),get()) }
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "app.db")
+                .fallbackToDestructiveMigration()
+                .build()
+    }
 }
 
 
